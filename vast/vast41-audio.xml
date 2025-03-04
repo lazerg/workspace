@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VAST version="4.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.iab.com/VAST">
+    <Ad id="20001" sequence="1" conditionalAd="false">
+        <InLine>
+            <AdSystem version="4.1">iabtechlab</AdSystem>
+            <Error>http://example.com/error</Error>
+            <Extensions>
+                <Extension type="iab-Count">
+                    <total_available>
+                        <![CDATA[ 2 ]]>
+                    </total_available>
+                </Extension>
+            </Extensions>
+            <Impression id="Impression-ID">https://audienceselect.hearst.com/</Impression>
+            <Pricing model="cpm" currency="USD">
+                <![CDATA[ 25.00 ]]>
+            </Pricing>
+            <AdTitle>iabtechlab audio ad</AdTitle>
+            <AdVerifications>
+                <Verification>
+                    <JavaScriptResource>
+                        <![CDATA[https://verificationcompany1.com/verification_script1.js]]>
+                    </JavaScriptResource>
+                </Verification>
+                <Verification>
+                    <JavaScriptResource>
+                        <![CDATA[https://verificationcompany.com/untrusted.js]]>
+                    </JavaScriptResource>
+                </Verification>
+            </AdVerifications>
+            <Advertiser>IAB Sample Company</Advertiser>
+            <Category authority="foo"/>
+            <Creatives>
+                <Creative id="5480" sequence="1" adId="2447226">
+                    <UniversalAdId idRegistry="Ad-ID" idValue="8465">8465</UniversalAdId>
+                    <Audio>
+                        <TrackingEvents>
+                            <Tracking event="start">https://audienceselect.hearst.com</Tracking>
+                            <Tracking event="firstQuartile">https://audienceselect.hearst.com</Tracking>
+                            <Tracking event="midpoint">https://audienceselect.hearst.com</Tracking>
+                            <Tracking event="thirdQuartile">https://audienceselect.hearst.com</Tracking>
+                            <Tracking event="complete">https://audienceselect.hearst.com</Tracking>
+                            <Tracking event="progress" offset="00:00:10">https://audienceselect.hearst.com</Tracking>
+                        </TrackingEvents>
+                        <Duration>00:00:14</Duration>
+                        <AudioFiles>
+                            <AudioFile id="5241" delivery="progressive" type="audio/mp3" bitrate="192"
+                                       minBitrate="128" maxBitrate="256">
+                                <![CDATA[https://iab-publicfiles.s3.amazonaws.com/vast/sample-audio-ad.mp3]]>
+                            </AudioFile>
+                            <AudioFile id="5244" delivery="progressive" type="audio/mp3" bitrate="128"
+                                       minBitrate="96" maxBitrate="192">
+                                <![CDATA[https://iab-publicfiles.s3.amazonaws.com/vast/sample-audio-ad-low-bitrate.mp3]]>
+                            </AudioFile>
+                        </AudioFiles>
+                        <AdParameters>
+                            <![CDATA[{"genre": "technology", "language": "en-US"}]]>
+                        </AdParameters>
+                        <AudioClicks>
+                            <ClickThrough id="blog">
+                                <![CDATA[https://iabtechlab.com]]>
+                            </ClickThrough>
+                        </AudioClicks>
+                    </Audio>
+                </Creative>
+            </Creatives>
+        </InLine>
+    </Ad>
+</VAST>
