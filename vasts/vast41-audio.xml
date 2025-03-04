@@ -8,12 +8,14 @@
 
             <Creatives>
                 <Creative id="1">
-                    <UniversalAdId idRegistry="Ad-ID">123456789</UniversalAdId>
+                    <UniversalAdId idRegistry="Ad-ID">
+                        123456789
+                    </UniversalAdId>
                     <Linear>
                         <Duration>00:00:30</Duration>
                         <MediaFiles>
                             <MediaFile delivery="progressive" type="audio/mpeg" bitrate="128" minBitrate="64" maxBitrate="192">
-                                <![CDATA[https://example.com/audio-ad.mp3]]>
+                                <![CDATA[https://raw.githubusercontent.com/lazerg/workspace/refs/heads/main/files/a_sad_melody.mp3]]>
                             </MediaFile>
                         </MediaFiles>
 
