@@ -11,7 +11,7 @@
                     <UniversalAdId idRegistry="Ad-ID">
                         123456789
                     </UniversalAdId>
-                    <Linear skipoffset="00:00:05">
+                    <Linear skipoffset="00:00:05" adType="audio">
                         <Duration>00:00:30</Duration>
                         <MediaFiles>
                             <MediaFile delivery="progressive" type="audio/mpeg" bitrate="128" minBitrate="64" maxBitrate="192">
