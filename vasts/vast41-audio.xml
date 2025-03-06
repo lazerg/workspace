@@ -14,7 +14,7 @@
                     <Linear skipoffset="00:00:05">
                         <Duration>00:00:30</Duration>
                         <MediaFiles>
-                            <MediaFile delivery="progressive" type="audio/mpeg" bitrate="128" minBitrate="64" maxBitrate="192">
+                            <MediaFile delivery="progressive" type="audio/mpeg" bitrate="128" minBitrate="64" maxBitrate="192" codec="mp3">
                                 <![CDATA[https://raw.githubusercontent.com/lazerg/workspace/refs/heads/main/files/a_sad_melody.mp3]]>
                             </MediaFile>
                         </MediaFiles>
