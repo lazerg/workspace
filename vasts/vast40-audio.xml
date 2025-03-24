@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VAST version="4.0">
+    <Ad id="12345">
+        <InLine adType="audio">
+            <AdSystem>Example Ad Server</AdSystem>
+            <AdTitle>Sample Audio Ad</AdTitle>
+            <Impression><![CDATA[https://example.com/impression]]></Impression>
+
+            <Creatives>
+                <Creative id="1">
+                    <UniversalAdId idRegistry="Ad-ID">
+                        123456789
+                    </UniversalAdId>
+                    <Linear skipoffset="00:00:05">
+                        <Duration>00:00:30</Duration>
+                        <MediaFiles>
+                            <MediaFile delivery="progressive" type="audio/mpeg" bitrate="128" minBitrate="64" maxBitrate="192" codec="mp3">
+                                <![CDATA[https://raw.githubusercontent.com/lazerg/workspace/refs/heads/main/files/a_sad_melody.mp3]]>
+                            </MediaFile>
+                        </MediaFiles>
+
+                        <TrackingEvents>
+                            <Tracking event="start"><![CDATA[https://example.com/start]]></Tracking>
+                            <Tracking event="firstQuartile"><![CDATA[https://example.com/firstQuartile]]></Tracking>
+                            <Tracking event="midpoint"><![CDATA[https://example.com/midpoint]]></Tracking>
+                            <Tracking event="thirdQuartile"><![CDATA[https://example.com/thirdQuartile]]></Tracking>
+                            <Tracking event="complete"><![CDATA[https://example.com/complete]]></Tracking>
+                        </TrackingEvents>
+
+                        <VideoClicks>
+                            <ClickThrough><![CDATA[https://example.com/clickthrough]]></ClickThrough>
+                        </VideoClicks>
+                    </Linear>
+                </Creative>
+            </Creatives>
+        </InLine>
+    </Ad>
+</VAST>
