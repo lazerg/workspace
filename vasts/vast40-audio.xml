@@ -8,9 +8,6 @@
 
             <Creatives>
                 <Creative id="1">
-                    <UniversalAdId idRegistry="Ad-ID">
-                        123456789
-                    </UniversalAdId>
                     <Linear skipoffset="00:00:05">
                         <Duration>00:00:30</Duration>
                         <MediaFiles>
