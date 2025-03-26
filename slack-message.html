@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slack Professional Text Maker</title>
+  <link rel="stylesheet" href="https://unpkg.com/hack@0.8.1/dist/hack.min.css">
+  <style>
+    body {
+      background: #1a1a1a;
+      color: #00ff00; /* Hacker green */
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    textarea {
+      width: 80%;
+      height: 100px;
+      background: #222;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      background: #333;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+      padding: 10px 20px;
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #444;
+    }
+
+    #responseContainer {
+      margin-top: 20px;
+      padding: 10px;
+      background: #222;
+      border: 1px solid #00ff00;
+      text-align: left;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Slack Professional Text Maker</h2>
+<textarea id="textInput" placeholder="Type something..."></textarea><br>
+<button id="submitBtn">Submit</button>
+
+<div id="responseContainer"></div>
+
+<script>
+const OPENAI_API_KEY = atob("c2stcHJvai1SbDR1X20zSWwtSE1fV3BuandVZDJmY1ZqRTA1MXVKVkNSZTFTeWJpZ0NJdWtack42RWtCaEhvVWlxRE9xZXppc2lFWVRRb0JGT1QzQmxia0ZKVTJMVjF5SUVTU3dQWGZUa19iRDM2NTdKdm9ULUVXRUJaNUw1X3VVZnRnbUtWZFZySmwzMVRiYkhvQW8xVTdDOVBDaXB6ekxfOEE=");
+
+const promptMaker = text => `
+You need to improve my prompt according to the following criteria:
+    \t•\tFix any grammar issues.
+    \t•\tAdjust the tone to make it more professional.
+
+Provide only improved text, no extra description and explanation is needed.
+
+Here is the text: ${text}
+`;
+
+document.getElementById('submitBtn').addEventListener('click', async function () {
+  let text = document.getElementById('textInput').value.trim();
+  let responseContainer = document.getElementById('responseContainer');
+
+  if (text !== '') {
+    responseContainer.innerHTML = '<p>Loading...</p>';
+
+    try {
+      let response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + OPENAI_API_KEY
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o',
+          messages: [{
+            role: 'user',
+            content: promptMaker(text)
+          }]
+        })
+      });
+
+      let data = await response.json();
+      if (data.choices && data.choices.length > 0) {
+        let content = data.choices[0].message.content;
+
+        content = content.replace(/\n/g, '<br>');
+        content = content.replace(/\*\*/g, '<b>');
+
+        responseContainer.innerHTML = content;
+      } else {
+        responseContainer.innerHTML = '<p>Error: No response received.</p>';
+      }
+    } catch (error) {
+      responseContainer.innerHTML = '<p>Error: ' + error.message + '</p>';
+    }
+  }
+});
+</script>
+
+</body>
+</html>
