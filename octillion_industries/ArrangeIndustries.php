@@ -72,6 +72,6 @@ class ArrangeIndustries
             $industries[$parentCode]['children'][] = $child;
         }
 
-        return $industries;
+        return array_values($industries);
     }
 }
