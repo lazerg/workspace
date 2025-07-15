@@ -1,24 +1,95 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <title>
+        Access Token Fetcher
+    </title>
+    <style>
+        pre {
+            white-space: pre-wrap;
+            word-break: break-all;
+            padding: 1em;
+            border-radius: 5px;
+            background: #f5f5f5;
+            overflow-x: auto;
+        }
 
-<style>
-    pre {
-        white-space: pre-wrap;
-        word-break: break-all;
-        padding: 1em;
-        border-radius: 5px;
-        background: #f5f5f5;
-        overflow-x: auto;
-    }
-</style>
-
+        #refresh {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: none;
+            font-family: "Courier New", Courier, monospace;
+            text-align: center;
+            margin: 1em auto;
+        }
+    </style>
+</head>
 <body>
-<h1>OAuth2 Token Response</h1>
-<pre id="result">Waiting for token...</pre>
+<div id="refresh">
+    refresh
+</div>
+
+<pre id="console">
+Waiting for access token...
+</pre>
+</body>
+</html>
 
 <script>
+    const el = document.getElementById('console');
+
+    const renderError = (message, shouldStop = true) => {
+        el.innerHTML = "<span style='color: red;'><b>ERROR:</b></span> " + message;
+
+        if (shouldStop) {
+            throw new Error(message);
+        }
+    }
+
+    const renderJson = json => {
+        const string = hljs.highlight(JSON.stringify(json, null, 2), {language: 'json'}).value;
+
+        el.innerHTML = `<pre><code class="json">${string}</code></pre>`;
+    }
+
+    const getAccessToken = env => {
+        fetch(env.domain + 'oauth2/token', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+                "grant_type": "authorization_code",
+                "client_id": env.client_id,
+                "client_secret": env.client_secret,
+                "code": env.code,
+                "redirect_uri": env.redirect_uri,
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                renderJson(data);
+            }).catch(error => {
+            renderError(`Error fetching access token: ${error.message}`);
+        })
+
+    }
+
     const params = new URLSearchParams(window.location.search);
+
+    if (!params.has('code')) {
+        renderError('Missing "code" parameter in URL.');
+    }
+
+    if (!params.has('client_id')) {
+        renderError('Missing "client_id" parameter in URL.');
+    }
+
+    if (!params.has('client_secret')) {
+        renderError('Missing "client_secret" parameter in URL.');
+    }
 
     const env = {
         code: params.get('code'),
@@ -28,29 +99,16 @@
         redirect_uri: window.location.href.split('&code')[0],
     }
 
-    fetch(`${env.domain}oauth2/token`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-            "grant_type": "authorization_code",
-            "client_id": env.client_id,
-            "client_secret": env.client_secret,
-            "code": env.code,
-            "redirect_uri": env.redirect_uri,
-        })
-    })
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById('result').innerHTML = `
-              <pre><code class="json">${hljs.highlight(JSON.stringify(data, null, 2), {language: 'json'}).value}</code></pre>
-            `;
-        })
-        .catch(err => {
-            document.getElementById('result').innerHTML = `
-              <pre style="color: red;">Error: ${err}</pre>
-            `;
-        });
+    getAccessToken(env);
+
+    const refreshToken = () => {
+        console.log('refresh token');
+    };
+
+    document.getElementById('refresh').addEventListener('click', () => {
+        renderJson({loading: 'Refreshing access token...'});
+        refreshToken();
+    });
 </script>
-</body>
+
+
