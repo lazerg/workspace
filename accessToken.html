@@ -1,15 +1,14 @@
 <script>
-    // https://d84l1y8p4kdic.cloudfront.net
-    // -- # ----- # ---- # ---- # ---- # ---- # ---- # ---- # ---- # ---- # ---- # ---- # ---- # -- //
-
-    const DOMAIN = 'eu-central-1zxqehttwb.auth.eu-central-1.amazoncognito.com';
+    // ----------------
     const CLIENT_ID = 'vqtt20bhshlu30krirlrnol9h';
     const CLIENT_SECRET = '27ac41rnrd590v2o42gh3t8sdp9b3mb6vdud9spmco3h25mg2vm';
-    const REDIRECT_URI = 'https://lazerg.github.io/workspace/accessToken.html';
+    // ----------------
+    const DOMAIN = document.referrer;
+    const REDIRECT_URI = `${location.origin}${location.pathname}`;
+    const CODE = (new URLSearchParams(window.location.search)).get('code');
+    // -- ----------------
 
-    // -- # ----- # ---- # ---- # ---- # ---- # ---- # ---- # ---- # ---- # ---- # ---- # ---- # -- //
-
-    fetch(`https://${DOMAIN}/oauth2/token`, {
+    fetch(`${DOMAIN}oauth2/token`, {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -18,8 +17,8 @@
             "grant_type": "authorization_code",
             "client_id": CLIENT_ID,
             "client_secret": CLIENT_SECRET,
-            "code": (new URLSearchParams(window.location.search)).get('code'),
-            "redirect_uri": REDIRECT_URI
+            "code": CODE,
+            "redirect_uri": REDIRECT_URI,
         })
     })
         .then(res => res.json())
