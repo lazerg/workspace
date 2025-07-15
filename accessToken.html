@@ -70,10 +70,12 @@ Waiting for access token...
         })
             .then(res => res.json())
             .then(data => {
+                window.token = data;
                 renderJson(data);
-            }).catch(error => {
-            renderError(`Error fetching access token: ${error.message}`);
-        })
+            })
+            .catch(error => {
+                renderError(`Error fetching access token: ${error.message}`);
+            })
 
     }
 
@@ -102,13 +104,36 @@ Waiting for access token...
     getAccessToken(env);
 
     const refreshToken = () => {
-        console.log('refresh token');
+        renderJson({loading: 'Refreshing access token...'});
+
+        fetch(env.domain + 'oauth2/token', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+                "grant_type": "refresh_token",
+                "client_id": env.client_id,
+                "client_secret": env.client_secret,
+                "refresh_token": window.token.refresh_token
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                window.token = {
+                    ...window.token,
+                    ...data,
+                    refresh_token: window.token.refresh_token
+                };
+
+                renderJson(window.token);
+            })
+            .catch(error => {
+                renderError(`Error refreshing access token: ${error.message}`);
+            });
     };
 
     document.getElementById('refresh').addEventListener('click', () => {
-        renderJson({loading: 'Refreshing access token...'});
-        refreshToken();
+       refreshToken();
     });
 </script>
-
-
