@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cognito OAuth2 Callback</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    pre { background: #f0f0f0; padding: 1rem; overflow-x: auto; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h1>Amazon Cognito OAuth2 Callback Page</h1>
+  <div id="content">Loading...</div>
+
+  <script>
+    (async () => {
+      const clientId = "YOUR_CLIENT_ID";
+      const redirectUri = "YOUR_REDIRECT_URI"; // Must match what's configured in Cognito
+      const cognitoDomain = "YOUR_COGNITO_DOMAIN"; // e.g. myappprefix.auth.eu-central-1.amazoncognito.com
+
+      const contentDiv = document.getElementById('content');
+
+      function getQueryParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
+
+      const code = getQueryParam('code');
+      if (!code) {
+        contentDiv.innerHTML = '<p class="error">Error: No authorization code found in URL.</p>';
+        return;
+      }
+
+      contentDiv.innerHTML = '<p>Exchanging code for tokens...</p>';
+
+      const tokenUrl = `https://${cognitoDomain}/oauth2/token`;
+      const body = new URLSearchParams({
+        grant_type: 'authorization_code',
+        client_id: clientId,
+        code,
+        redirect_uri: redirectUri
+      });
+
+      try {
+        const response = await fetch(tokenUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+
+        const data = await response.json();
+
+        contentDiv.innerHTML = `
+          <h2>Tokens</h2>
+          <p><strong>Access Token:</strong></p>
+          <pre>${data.access_token}</pre>
+          <p><strong>Refresh Token:</strong></p>
+          <pre>${data.refresh_token || '(none returned)'}</pre>
+          <p><strong>ID Token:</strong></p>
+          <pre>${data.id_token}</pre>
+          <p><strong>Full Response:</strong></p>
+          <pre>${JSON.stringify(data, null, 2)}</pre>
+        `;
+      } catch (err) {
+        contentDiv.innerHTML = `<p class="error">Error exchanging code: ${err.message}</p>`;
+        console.error(err);
+      }
+    })();
+  </script>
+</body>
+</html>
