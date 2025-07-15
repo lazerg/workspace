@@ -1,26 +1,43 @@
+<body>
+<h1>OAuth2 Token Response</h1>
+<pre id="result">Waiting for token...</pre>
+
 <script>
     // ----------------
     const CLIENT_ID = 'vqtt20bhshlu30krirlrnol9h';
     const CLIENT_SECRET = '27ac41rnrd590v2o42gh3t8sdp9b3mb6vdud9spmco3h25mg2vm';
     // ----------------
-    const DOMAIN = document.referrer;
+    const referrer = document.referrer ? new URL(document.referrer).origin : '';
+    const DOMAIN = referrer.endsWith('/') ? referrer.slice(0, -1) : referrer;
     const REDIRECT_URI = `${location.origin}${location.pathname}`;
     const CODE = (new URLSearchParams(window.location.search)).get('code');
-    // -- ----------------
+    // ----------------
 
-    fetch(`${DOMAIN}oauth2/token`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-            "grant_type": "authorization_code",
-            "client_id": CLIENT_ID,
-            "client_secret": CLIENT_SECRET,
-            "code": CODE,
-            "redirect_uri": REDIRECT_URI,
+    const resultEl = document.getElementById('result');
+
+    if (CODE && DOMAIN) {
+        fetch(`${DOMAIN}/oauth2/token`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+                "grant_type": "authorization_code",
+                "client_id": CLIENT_ID,
+                "client_secret": CLIENT_SECRET,
+                "code": CODE,
+                "redirect_uri": REDIRECT_URI,
+            })
         })
-    })
-        .then(res => res.json())
-        .then(data => console.log(data));
+            .then(res => res.json())
+            .then(data => {
+                resultEl.textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(err => {
+                resultEl.textContent = "Error: " + err;
+            });
+    } else {
+        resultEl.textContent = "Missing authorization code or referrer.";
+    }
 </script>
+</body>
